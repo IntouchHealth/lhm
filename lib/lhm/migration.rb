@@ -28,6 +28,10 @@ module Lhm
       Timestamp.new(@start)
     end
 
+    def origin_pk
+      @origin_pk ||= origin.pk
+    end
+
     def origin_name
       @origin_name ||= origin.name
     end
