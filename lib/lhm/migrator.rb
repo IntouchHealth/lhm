@@ -180,7 +180,7 @@ module Lhm
       @conditions = sql
     end
 
-    def before_switch
+    def before_chunk
       migrate_inbound_foreign_keys
     end
 

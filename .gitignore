@@ -15,3 +15,4 @@ coverage
 bin/dbdeployer
 /dbdeployer/sandboxes
 /dbdeployer/binaries
+*.swp
