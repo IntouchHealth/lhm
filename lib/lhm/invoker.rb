@@ -52,10 +52,10 @@ module Lhm
       entangler = Entangler.new(migration, @connection, options)
 
       entangler.run do
+        @migrator.before_switch
         Chunker.new(migration, @connection, options).run
         raise "Required triggers do not exist" unless triggers_still_exist?(entangler)
-
-        @migrator.before_switch
+        puts "TEST"
         if options[:atomic_switch]
           AtomicSwitcher.new(migration, @connection).run
         else
