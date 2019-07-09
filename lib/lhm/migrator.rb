@@ -218,9 +218,6 @@ module Lhm
 
     def migrate_inbound_foreign_keys
       @origin.references.each do |reference|
-        drop_stmt = "ALTER TABLE #{reference['table_name']} DROP FOREIGN KEY #{reference['constraint_name']}"
-        @connection.execute(tagged(drop_stmt))
-
         create_stmt = "ALTER TABLE #{reference['table_name']} ADD CONSTRAINT #{reference['constraint_name']} FOREIGN KEY (#{reference['column_name']}) REFERENCES #{@name}(#{reference['referenced_column_name']})"
         @connection.execute(tagged(create_stmt))
       end
