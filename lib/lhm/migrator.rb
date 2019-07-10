@@ -21,6 +21,8 @@ module Lhm
       @name = table.destination_name
       @statements = []
       @renames = {}
+      drop_foreign_keys
+      add_foreign_keys
     end
 
     # Alter a table with a custom statement
@@ -180,8 +182,23 @@ module Lhm
       @conditions = sql
     end
 
-    def before_chunk
-      migrate_inbound_foreign_keys
+    def drop_foreign_keys
+      @origin.references.each do |reference|
+        ddl('alter table `%s` drop foreign key `%s`' %
+            [reference['table_name'], reference['constraint_name']])
+      end
+    end
+
+    def add_foreign_keys
+      @origin.references.each do |reference|
+        ddl('alter table `%s` add constraint `%s` foreign key (`%s`) references `%s`(`%s`)' %
+            [reference['table_name'],
+             reference['constraint_name'],
+             reference['column_name'],
+             @name,
+             reference['referenced_colum_name']
+            ])
+      end
     end
 
     private
@@ -214,13 +231,6 @@ module Lhm
     def destination_create
       stmt = @origin.destination_ddl
       @connection.execute(tagged(stmt))
-    end
-
-    def migrate_inbound_foreign_keys
-      @origin.references.each do |reference|
-        create_stmt = "ALTER TABLE #{reference['table_name']} ADD CONSTRAINT #{reference['constraint_name']} FOREIGN KEY (#{reference['column_name']}) REFERENCES #{@name}(#{reference['referenced_column_name']})"
-        @connection.execute(tagged(create_stmt))
-      end
     end
 
     def destination_read
