@@ -48,6 +48,7 @@ module Lhm
     def run(options = {})
       normalize_options(options)
       set_session_lock_wait_timeouts
+      @migrator.migrate_foreign_keys
       migration = @migrator.run
       entangler = Entangler.new(migration, @connection, options)
 
@@ -55,7 +56,6 @@ module Lhm
         Chunker.new(migration, @connection, options).run
         raise "Required triggers do not exist" unless triggers_still_exist?(entangler)
 
-        @migrator.migrate_foreign_keys
         if options[:atomic_switch]
           AtomicSwitcher.new(migration, @connection).run
         else
