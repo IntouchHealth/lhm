@@ -196,7 +196,7 @@ module Lhm
              reference['constraint_name'],
              reference['column_name'],
              @name,
-             reference['referenced_colum_name']
+             reference['referenced_column_name']
             ])
       end
     end
