@@ -21,8 +21,6 @@ module Lhm
       @name = table.destination_name
       @statements = []
       @renames = {}
-      drop_foreign_keys
-      add_foreign_keys
     end
 
     # Alter a table with a custom statement
@@ -221,6 +219,7 @@ module Lhm
 
     def execute
       destination_create
+      statements += [drop_foreign_keys, add_foreign_keys]
       @statements.each do |stmt|
         @connection.execute(tagged(stmt))
       end
