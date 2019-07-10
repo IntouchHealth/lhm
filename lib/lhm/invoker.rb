@@ -55,7 +55,7 @@ module Lhm
         Chunker.new(migration, @connection, options).run
         raise "Required triggers do not exist" unless triggers_still_exist?(entangler)
 
-        migrate_foreign_keys
+        @migrator.migrate_foreign_keys
         if options[:atomic_switch]
           AtomicSwitcher.new(migration, @connection).run
         else
