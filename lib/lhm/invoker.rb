@@ -24,6 +24,8 @@ module Lhm
     def initialize(origin, connection)
       @connection = connection
       @migrator = Migrator.new(origin, connection)
+      @migrator.drop_foreign_keys
+      @migrator.add_foreign_keys
     end
 
     def set_session_lock_wait_timeouts

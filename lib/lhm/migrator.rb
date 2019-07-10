@@ -219,8 +219,6 @@ module Lhm
 
     def execute
       destination_create
-      drop_foreign_keys
-      add_foreign_keys
       @statements.each do |stmt|
         @connection.execute(tagged(stmt))
       end
