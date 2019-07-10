@@ -180,15 +180,10 @@ module Lhm
       @conditions = sql
     end
 
-    def drop_foreign_keys
+    def migrate_foreign_keys
       @origin.references.each do |reference|
         ddl('alter table `%s` drop foreign key `%s`' %
             [reference['table_name'], reference['constraint_name']])
-      end
-    end
-
-    def add_foreign_keys
-      @origin.references.each do |reference|
         ddl('alter table `%s` add constraint `%s` foreign key (`%s`) references `%s`(`%s`)' %
             [reference['table_name'],
              reference['constraint_name'],
